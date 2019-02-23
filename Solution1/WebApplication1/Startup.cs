@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebApplication1.Models;
+using Microsoft.EntityFrameworkCore;
+using WebApplication1.Managers;
 
 namespace WebApplication1
 {
@@ -20,6 +23,8 @@ namespace WebApplication1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IUserManager, UserManager>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // In production, the Angular files will be served from this directory
@@ -27,6 +32,12 @@ namespace WebApplication1
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            //var connection = @"Server=DESKTOP-ANQ7OOQ\SQLEXPRESS;Database=TestDB;Trusted_Connection=True;ConnectRetryCount=0";
+            var connection = Configuration.GetConnectionString("TestDB");
+            services.AddDbContext<TestDBContext>
+                (options => options.UseSqlServer(connection));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
