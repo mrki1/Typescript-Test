@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { TreeviewModule } from 'ngx-treeview';
 import { AngularDraggableModule } from 'angular2-draggable';
+import { ChartsModule } from 'ng2-charts';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -13,8 +14,11 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { TreeComponent } from './treeview/tree.component';
 import { MegaMenuComponent } from './nav-menu/mega-menu/mega-menu.component';
+import { BarChartComponent } from './charts/chart.component';
+import { Globals } from './globals/globals';
 
 import { UserService } from './services/user/user.service';
+import { CommService } from "./services/communication/communication.service";
 
 @NgModule({
   declarations: [
@@ -24,7 +28,8 @@ import { UserService } from './services/user/user.service';
     CounterComponent,
     FetchDataComponent,
     TreeComponent,
-    MegaMenuComponent
+    MegaMenuComponent,
+    BarChartComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -36,9 +41,10 @@ import { UserService } from './services/user/user.service';
       { path: 'fetch-data', component: FetchDataComponent },
     ]),
     TreeviewModule.forRoot(),
-    AngularDraggableModule
+    AngularDraggableModule,
+    ChartsModule
   ],
-  providers: [UserService],
+  providers: [UserService, Globals, CommService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

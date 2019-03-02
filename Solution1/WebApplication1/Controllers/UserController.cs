@@ -31,7 +31,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IList<TreeviewItem>> GetSelectedData([FromBody] TreeviewItem[] searchItm)
+        public async Task<WorkingHours> GetSelectedData([FromBody] ChartInfo searchItm)
         {
             return await _userManager.GetSelectedData(searchItm);
         }

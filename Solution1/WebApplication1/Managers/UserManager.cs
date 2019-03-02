@@ -198,57 +198,127 @@ namespace WebApplication1.Managers
             return sql;
         }
 
-        public async Task<dynamic> GetSelectedData(TreeviewItem[] searchItm)
+        public async Task<WorkingHours> GetSelectedData(ChartInfo chartInfo)
         {
 
             dynamic results = null;
             TreeviewItem item = null;
 
-            string[] grouping = new string[3] { "CountryName", "CityName", "DepartmentName" };
+            TreeviewItem[] searchItm = chartInfo.searchValue;
+
+            string[] treeGrouping = new string[3] { "CountryName", "CityName", "DepartmentName" };
+
+            List<string> chartGrouping = chartInfo.chartGrouping;
+            string group1 = chartGrouping[0];
+            string group2 = chartGrouping[1];
+
+            if (chartGrouping.Contains("Month"))
+            {
+                chartGrouping.Add("Year");
+            }
+
+            string groupingStr = String.Join(",", chartGrouping);
+
             int deep = 0;
             string field;
 
-            string stmt = $"select UsersVW.CountryName, UsersVW.CityName, UsersVW.DepartmentName, Hours.* from UsersVW" +
-                $" INNER JOIN Hours ON UsersVW.EmployeeId = Hours.EmployeeId";
+            //string stmt = $"select UsersVW.CountryName, UsersVW.CityName, UsersVW.DepartmentName, Hours.* from UsersVW" +
+            // $" INNER JOIN Hours ON UsersVW.EmployeeId = Hours.EmployeeId";
+
+            string stmt = $"select {groupingStr} , sum(Hours) as sum from UsersVW" +
+             $" INNER JOIN Hours ON UsersVW.EmployeeId = Hours.EmployeeId";
 
             string sql = "";
 
-            for (int i = 0; i < searchItm.Length; i++)
+            if (searchItm != null)
             {
-
-                field = grouping[deep];
-
-                item = searchItm[i];
-
-                if (!sql.Equals("")) {
-                    sql = sql + " or ";
-                }
-
-                sql = sql + "(";
-
-                sql = sql + field + " = '" + item.text.Substring(0, item.text.IndexOf("(") - 1) + "'";
-
-                if (item.internalChildren != null)
+                for (int i = 0; i < searchItm.Length; i++)
                 {
-                    sql = sql + " and " + getChildSql(item.internalChildren, deep, grouping);
+
+                    field = treeGrouping[deep];
+
+                    item = searchItm[i];
+
+                    if (!sql.Equals(""))
+                    {
+                        sql = sql + " or ";
+                    }
+
+                    sql = sql + "(";
+
+                    sql = sql + field + " = '" + item.text.Substring(0, item.text.IndexOf("(") - 1) + "'";
+
+                    if (item.internalChildren != null)
+                    {
+                        sql = sql + " and " + getChildSql(item.internalChildren, deep, treeGrouping);
+                    }
+
+                    sql = sql + ")";
                 }
 
-                sql = sql + ")";
+                if (!sql.Equals(""))
+                {
+                    stmt = stmt + " where " + sql;
+                }
             }
 
-            if (!sql.Equals(""))
-            {
-                stmt = stmt + " where " + sql;
-            }
+            stmt = stmt + $" group by {groupingStr} order by {groupingStr}";
 
+            WorkingHours wh = new WorkingHours();
+            List<string> chartLabels = new List<string>();
 
             using (IDbConnection conn = Connection)
             {
                 conn.Open();
                 results = await conn.QueryAsync<dynamic>(stmt);
+
+                int sum;
+                string val, val1 = "", val2 = "";
+                Hours hrs;
+                List<Hours> hourList = new List<Hours>();
+                List<int> valLst = null;
+
+                foreach (var result in results)
+                {
+         
+                    var data = (IDictionary<string, object>)result;
+                    sum = (int)data["sum"];
+                    
+                    val = data[group1].ToString();
+                    if (group1.Equals("Month"))
+                    {
+                        val += "/" + data["Year"].ToString();
+                    }
+
+                    val2 = data[group2].ToString();
+                    if (group2.Equals("Month"))
+                    {
+                        val2 += "/" + data["Year"].ToString();
+                    }
+
+                    if (!chartLabels.Contains(val2))
+                    {
+                        chartLabels.Add(val2);
+                    }
+
+                    if (!val.Equals(val1))
+                    {
+                        valLst = new List<int>();
+                        hrs = new Hours() { data = valLst, label = val };
+                        hourList.Add(hrs);
+                    }
+
+                    valLst.Add(sum);
+
+                    val1 = val;
+                }
+
+                //string[] chartLabels = new string[] { "1. month", "2. month" };
+                wh.chartLabels = chartLabels;
+                wh.hourList = hourList;
             }
 
-            return results;
+            return wh;
         }
     }
 }

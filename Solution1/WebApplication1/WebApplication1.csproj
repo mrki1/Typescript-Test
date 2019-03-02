@@ -28,10 +28,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\services\communication\communication.service.ts" />
     <None Remove="ClientApp\src\app\services\user\user.service.ts" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\services\communication\communication.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\user\user.service.ts" />
   </ItemGroup>
 

@@ -1,7 +1,9 @@
-import { Component, ElementRef, Renderer2 } from '@angular/core';
+import { Component, ElementRef, Renderer2, EventEmitter, Output } from '@angular/core';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
 import { UserService } from '../services/user/user.service';
 import * as cloneDeep from 'lodash/cloneDeep';
+import { Globals } from '../globals/globals';
+import { CommService } from "../services/communication/communication.service";
 
 @Component({
   selector: 'app-tree',
@@ -13,7 +15,16 @@ export class TreeComponent {
   items: TreeviewItem[];
   item: TreeviewItem;
   values: number[];
-  searchParams;
+  searchParams: TreeviewItem[];
+  @Output() updateView1 = new EventEmitter<any>();
+
+  constructor(
+    private service: UserService, private rnd: Renderer2, private globals: Globals, private comm: CommService
+  ) { }
+
+  getData() {
+    this.comm.sendDataCall();
+  }
 
   config = TreeviewConfig.create({
     hasAllCheckBox: true,
@@ -36,14 +47,9 @@ export class TreeComponent {
 
   buttonClass = this.buttonClasses[0];
 
-  constructor(
-    private service: UserService, private elRef: ElementRef, private rnd: Renderer2
-  ) { }
-
   processChildren(children) {
     for (var i = children.length - 1; i >= 0; i--) {
       if (children[i] != null) {
-        //console.log(children[i].checked);
         if (children[i].checked == undefined) {
           if (children[i].children != null) {
             this.processChildren(children[i].children);
@@ -68,6 +74,7 @@ export class TreeComponent {
     );
 
     this.searchParams = cloneDeep(this.items);
+    this.globals.searchParams = this.searchParams;
 
     this.rnd.listen(document, 'contextmenu', (event) => {
       var found = false;
@@ -88,7 +95,6 @@ export class TreeComponent {
         cantThinkOfAName.style.left = event.clientX + "px";
         cantThinkOfAName.style.top = event.clientY + "px"; 
       }
-      //console.log(event);
     });
   }
 
@@ -97,17 +103,12 @@ export class TreeComponent {
   }
 
   onSelectionChange($event) {
-    //console.log(this.values);
-    this.values = $event;
-    //console.log(this.values);
 
-    //console.log(this.items);
-    //console.log(clonedObject);
+    this.values = $event;
     this.searchParams = cloneDeep(this.items);
 
     for (var i = this.searchParams.length - 1; i >= 0; i--) {
         if (this.searchParams[i] != null) {
-          //console.log(this.clonedObject[i].checked);
           if (this.searchParams[i].checked == undefined) {
             if (this.searchParams[i].children != null) {
               this.processChildren(this.searchParams[i].children);
@@ -121,20 +122,11 @@ export class TreeComponent {
           }
         }
     }
+
+    this.globals.searchParams = this.searchParams;
   }
 
   onFilterChange(value: string) { 
     console.log('filter:', value); 
-  }
-
-  getData() {
-    console.log("search:");
-    console.log(this.searchParams);
-
-    this.service.getSelectedData(this.searchParams).subscribe(
-      data => { },
-      err => console.error(err),
-      () => { console.log('done loading hours') }
-    );
   }
 }

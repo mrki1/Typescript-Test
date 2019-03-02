@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { TreeviewItem } from 'ngx-treeview';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { TreevItem } from '../../models/models';
+import { TreevItem, WorkingHours, ChartInfo } from '../../models/models';
 import 'rxjs/add/operator/map';
 
 
@@ -101,8 +101,8 @@ export class UserService {
         let item: TreeviewItem;
         let child: TreeviewItem;
 
-        console.log(res.length);
-        console.log(res);
+        //console.log(res.length);
+        //console.log(res);
 
         items = new Array();
 
@@ -123,16 +123,21 @@ export class UserService {
           items.push(item);
         }
 
-        console.log(items);
+        //console.log(items);
 
         return items;
       });
   }
 
-  getSelectedData(srch: TreeviewItem[]): Observable<any> {
-    return this.http.post<TreevItem[]>('/api/User/GetSelectedData', srch)
+  getSelectedData(srch: ChartInfo): Observable<WorkingHours> {
+    console.log("srch");
+    console.log(srch);
+    return this.http.post<WorkingHours>('/api/User/GetSelectedData', srch)
       .map((res: any) => {
-        return null;
+        console.log("res");
+        console.log(res);
+        return res;
+        //return res.json() as WorkingHours;
       });
   }
 }

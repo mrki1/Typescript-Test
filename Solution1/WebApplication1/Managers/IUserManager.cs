@@ -10,6 +10,6 @@ namespace WebApplication1.Managers
     {
         Task<IList<TreevItem>> GetTreeviewData();
 
-        Task<dynamic> GetSelectedData(TreeviewItem[] searchItm);
+        Task<WorkingHours> GetSelectedData(ChartInfo chartInfo);
     }
 }

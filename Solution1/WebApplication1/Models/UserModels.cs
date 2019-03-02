@@ -26,6 +26,12 @@ namespace WebApplication1.Models
         public TreeviewItem[] internalChildren { get; set; }
     }
 
+    public class ChartInfo
+    {
+        public TreeviewItem[] searchValue { get; set; }
+        public List<string> chartGrouping { get; set; }
+    }
+
     public class UsersVW {
         public int CountryId { get; set; }
         public string CountryName { get; set; }
@@ -47,5 +53,17 @@ namespace WebApplication1.Models
         public int CountryName_count { get; set; }
         public int CityName_count { get; set; }
         public int DepartmentName_count { get; set; }
+    }
+
+    public class Hours
+    {
+        public List<int> data { get; set; }
+        public string label { get; set; }  
+    }
+
+    public class WorkingHours
+    {
+        public List<Hours> hourList { get; set; }
+        public List<string> chartLabels { get; set; } 
     }
 }

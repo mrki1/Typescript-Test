@@ -1,0 +1,59 @@
+<div style="padding:10px;border-radius: 10px;background-color:#ffe6ff;margin-bottom:10px">
+  <div style="padding-left:15px">
+    <input *ngIf="chartEditBool" type="text" style="height:25px;width:100%;max-width:300px;vertical-align:top;" [(ngModel)]="chartName">
+    <span *ngIf="!chartEditBool">{{chartName}}</span>
+      <div style="display:inline-block;float:right;text-align:right">
+        <span class="fa fa"></span>
+        <span class="fa fa-check" *ngIf="chartEditBool" style="padding-left:10px;padding-right:10px;color:green" (click)="saveEdit()"></span>
+        <span class="fa fa-times" *ngIf="chartEditBool" style="padding-left:10px;padding-right:10px;color:red" (click)="cancelEdit()"></span>
+        <span class="fa fa-pencil" *ngIf="!chartEditBool" style="padding-left:10px;padding-right:10px" (click)="startEdit()"></span>
+        <span class="fa fa-trash-o" style="padding-left:10px;padding-right:10px" (click)="deleteChart()"></span>
+      </div>
+   </div>
+  <div style="height:5px;clear:both" ></div>
+  <div class="row" style="margin-bottom:20px;padding-left:30px">
+    <div style="padding-right:10px">
+      <div>
+        <h6>Y-Axis</h6>
+      </div>
+      <div>
+        <select [(ngModel)]="yAxis" (change)="changeYAxis($event.target.value)" id="y-axis">
+          <option value="" disabled selected>Select y axis</option>
+          <option *ngFor="let item of yAxisList" [value]="item.value">{{item.text}}</option>
+        </select>
+      </div>
+    </div>
+    <div style="padding-right:10px">
+      <div>
+        <h6>X-Axis</h6>
+      </div>
+      <div>
+        <select [(ngModel)]="xAxis" (change)="changeXAxis($event.target.value)" id="x-axis">
+          <option value="" disabled selected>Select x axis</option>
+          <option *ngFor="let item of xAxisList" [value]="item.value">{{item.text}}</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <div>
+        <h6>Group By</h6>
+      </div>
+      <div>
+        <select [(ngModel)]="groupBy" (change)="changeGroupBy($event.target.value)" id="g-by">
+          <option value="" disabled selected>Select group by</option>
+          <option *ngFor="let item of groupByList" [value]="item.value">{{item.text}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="workingHours">
+    <div style="display: block">
+      <canvas baseChart
+              [datasets]="workingHours.hourList"
+              [labels]="workingHours.chartLabels"
+              [options]="chartOptions"
+              [legend]="chartLegend"
+              [chartType]="chartType"></canvas>
+    </div>
+  </div>
+</div>
