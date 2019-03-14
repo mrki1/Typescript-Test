@@ -5,10 +5,10 @@
 </head>
 <body>
   <div class="topnav" id="myTopnav">
-    <a href="#home" class="active">Home</a>
-    <a href="#news">News</a>
-    <a href="#contact">Contact</a>
-    <a href="#about">About</a>
+    <a href="#home" [ngClass]="selectedMenu === 1 ? 'active' : ''" (click)="changeMenu(1)">Home</a>
+    <a href="#news" [ngClass]="selectedMenu === 2 ? 'active' : ''" (click)="changeMenu(2)">News</a>
+    <a href="#contact" [ngClass]="selectedMenu === 3 ? 'active' : ''" (click)="changeMenu(3)">Contact</a>
+    <a href="#about" [ngClass]="selectedMenu === 4 ? 'active' : ''" (click)="changeMenu(4)">About</a>
     <a href="javascript:void(0);" style="font-size:15px;" class="icon" (click)="myFunction()">&#9776;</a>
   </div>
 </body>

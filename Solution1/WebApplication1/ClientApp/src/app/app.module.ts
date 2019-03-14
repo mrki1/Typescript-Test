@@ -1,11 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { TreeviewModule } from 'ngx-treeview';
-import { AngularDraggableModule } from 'angular2-draggable';
 import { ChartsModule } from 'ng2-charts';
+//import { LOCALE_ID } from '@angular/core';
+//import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+//import { registerLocaleData } from '@angular/common';
+//import localeHr from '@angular/common/locales/hr';
+//import localeHrExtra from '@angular/common/locales/extra/hr';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { httpLoaderFactory } from './services/translate/translate.service';
+
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -19,6 +26,9 @@ import { Globals } from './globals/globals';
 
 import { UserService } from './services/user/user.service';
 import { CommService } from "./services/communication/communication.service";
+
+//registerLocaleData(localeHr, 'hr');
+//registerLocaleData(localeHr, 'hr', localeHrExtra);
 
 @NgModule({
   declarations: [
@@ -41,8 +51,14 @@ import { CommService } from "./services/communication/communication.service";
       { path: 'fetch-data', component: FetchDataComponent },
     ]),
     TreeviewModule.forRoot(),
-    AngularDraggableModule,
-    ChartsModule
+    ChartsModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
   ],
   providers: [UserService, Globals, CommService],
   bootstrap: [AppComponent]

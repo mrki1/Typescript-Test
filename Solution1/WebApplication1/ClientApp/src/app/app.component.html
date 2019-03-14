@@ -1,28 +1,41 @@
 <div class='container-fluid'>
-  <div class='row'>
-    <div class='col-sm-3'>
-      <!--<app-nav-menu></app-nav-menu>-->
-      <app-tree></app-tree>
+  <div style="padding:10px;background-color:aliceblue">
+    <div style="display:inline-block;float:right">
+      <span>Country: </span>
+      <select style="margin:2px" [(ngModel)]="selectedCountry" (change)="changeCountry($event.target.value)" id="countryId">
+        <option value="" disabled selected>Select country</option>
+        <option *ngFor="let item of countryList" [value]="item.code">{{item.text}}</option>
+      </select>
     </div>
-    <div class='col-sm-9 body-content'>
-      <mega-menu></mega-menu>
-      <div id="chart_container" style="padding:10px;width:100%">
-        <div style="display:inline-block">
-          <input type="button" style="height:25px;font-size:10px" value="Add New Chart" (click)="addNewChart()">
-        </div>
-        <div style="display:inline-block;float:right">
-          <input type="text" style="height:25px;width:300px;font-size:10px;vertical-align:top;margin:2px" [(ngModel)]="bookmarkName">
-          <input type="button" style="height:25px;font-size:10px;vertical-align:top;margin:2px" [value]="bookSaveBtnName" (click)="addNewBookMark()">
-          <input type="button" [disabled]="selectedBookmark == null" style="height:25px;font-size:10px;vertical-align:top;margin:2px" value="Update" (click)="updateBookMark()">
-          <input type="button" [disabled]="selectedBookmark == null" style="height:25px;font-size:10px;vertical-align:top;margin:2px" value="Delete" (click)="deleteBookMark()">
-          <select style="margin:2px" [(ngModel)]="selectedBookmarkName" (change)="changeBookmark($event.target.value)" id="bookId">
-            <option value="" disabled selected>Select bookmark</option>
-            <option *ngFor="let item of bookmarkList" [value]="item.text">{{item.text}}</option>
-          </select>
-        </div>
-        <div style="height:5px;clear:both"></div>
+    <div style="clear:both"></div>
+  </div>
+    <div class='row'>
+      <div class='col-sm-3'>
+        <!--<app-nav-menu></app-nav-menu>-->
+        <app-tree></app-tree>
       </div>
-      <app-bar-chart *ngFor="let item of chartList"></app-bar-chart>
+      <div class='col-sm-9 body-content'>
+        <mega-menu></mega-menu>
+        <div id="chart_container" *ngIf="tab_id === 1" style="padding:10px;width:100%">
+          <div style="display:inline-block">
+            <input type="button" style="height:25px;font-size:10px" value="Add New Chart" (click)="addNewChart()">
+          </div>
+          <div style="display:inline-block;float:right">
+            <span>
+              {{'bookmarks.title' | translate}}
+            </span>
+            <input type="text" style="height:25px;width:300px;font-size:10px;vertical-align:top;margin:2px" [(ngModel)]="bookmarkName">
+            <input type="button" style="height:25px;font-size:10px;vertical-align:top;margin:2px" [value]="bookSaveBtnName" (click)="addNewBookMark()">
+            <input type="button" [disabled]="selectedBookmark == null" style="height:25px;font-size:10px;vertical-align:top;margin:2px" value="Update" (click)="updateBookMark()">
+            <input type="button" [disabled]="selectedBookmark == null" style="height:25px;font-size:10px;vertical-align:top;margin:2px" value="Delete" (click)="deleteBookMark()">
+            <select style="margin:2px" [(ngModel)]="selectedBookmarkName" (change)="changeBookmark($event.target.value)" id="bookId">
+              <option value="" disabled selected>Select bookmark</option>
+              <option *ngFor="let item of bookmarkList" [value]="item.text">{{item.text}}</option>
+            </select>
+          </div>
+          <div style="height:10px;clear:both"></div>
+          <app-bar-chart *ngFor="let item of chartList" [chartItm]="item" [chartList]="chartList"></app-bar-chart>
+        </div>
+      </div>
     </div>
   </div>
-</div>

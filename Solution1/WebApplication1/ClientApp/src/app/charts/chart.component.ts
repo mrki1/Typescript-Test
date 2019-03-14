@@ -9,6 +9,7 @@ import { TreeviewItem } from 'ngx-treeview';
 @Component({
   selector: 'app-bar-chart',
   templateUrl: './chart.component.html',
+  styleUrls: ['./chart.component.less']
 })
 
 export class BarChartComponent {
@@ -18,6 +19,7 @@ export class BarChartComponent {
   public chartType: string = 'bar';
   searchParams: TreeviewItem[];
   subscription: Subscription;
+  subscription1: Subscription;
   xAxis;
   yAxis;
   groupBy;
@@ -26,8 +28,15 @@ export class BarChartComponent {
   groupByList = new Array;
   chartInfo: ChartInfo;
   chartEditBool = false;
-  chartName = "Test Chart"
-  chartNameOld = "Test Chart";
+  chartName = "";
+  chartNameOld;
+  @Input() chartList;
+  @Input() chartItm;
+  colapsedBool = false;
+
+  toogleColapse() {
+    this.colapsedBool = !this.colapsedBool;
+  }
 
   startEdit() {
     this.chartNameOld = this.chartName;
@@ -35,6 +44,17 @@ export class BarChartComponent {
   }
 
   saveEdit() {
+    if (this.chartName === "") {
+      alert("Please fill some name!");
+      return;
+    }
+
+    for (var i = 0; i < this.chartList.length; i++) {
+      if (this.chartList[i].id === this.chartItm.id) {
+        this.chartList[i].text = this.chartName;
+        break;
+      }
+    }
 
     this.chartEditBool = false;
   }
@@ -45,7 +65,12 @@ export class BarChartComponent {
   }
 
   deleteChart() {
-
+    for (var i = 0; i < this.chartList.length; i++) {
+      if (this.chartList[i].id === this.chartItm.id) {
+        this.chartList.splice(i, 1);
+        break;
+      }
+    }
   }
 
   changeXAxis(value) {
@@ -93,6 +118,9 @@ export class BarChartComponent {
   }
 
   ngOnInit() {
+
+    this.chartEditBool = true;
+    this.chartNameOld = this.chartName;
 
     this.yAxisList.push({ "text": "Sum Of Hours", "value": "Sum" });
     this.xAxisList.push({ "text": "Month", "value": "Month" }, { "text": "Year", "value": "Year" }, { "text": "Country", "value": "CountryName" }, { "text": "Department", "value": "DepartmentName" });

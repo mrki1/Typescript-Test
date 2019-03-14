@@ -29,16 +29,24 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\app\services\communication\communication.service.ts" />
+    <None Remove="ClientApp\src\app\services\translate\translate.service.ts" />
     <None Remove="ClientApp\src\app\services\user\user.service.ts" />
+    <None Remove="package.json_old" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="package.json_old" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\services\communication\communication.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\translate\translate.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\user\user.service.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="ClientApp\src\app\resizable\" />
+    <Folder Include="ClientApp\src\assets\i18n\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

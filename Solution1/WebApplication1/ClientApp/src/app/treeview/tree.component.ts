@@ -22,6 +22,10 @@ export class TreeComponent {
     private service: UserService, private rnd: Renderer2, private globals: Globals, private comm: CommService
   ) { }
 
+  createClick() {
+
+  }
+
   getData() {
     this.comm.sendDataCall();
   }

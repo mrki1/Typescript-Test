@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class CommService {
- private subject = new Subject<any>();
+  private subject = new Subject<any>();
+  private subject1 = new Subject<any>();
 
  sendDataCall() {
     this.subject.next();
@@ -12,5 +13,13 @@ export class CommService {
 
  getDataCall(): Observable<any> {
     return this.subject.asObservable();
- }
+  }
+
+  tabChanged(tabId) {
+    this.subject1.next(tabId);
+  }
+
+  setTabChanged(): Observable<any> {
+    return this.subject1.asObservable();
+  }
 }

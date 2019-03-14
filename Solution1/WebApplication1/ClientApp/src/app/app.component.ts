@@ -1,5 +1,8 @@
 import { Component, Renderer2, ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
 import { BarChartComponent } from './charts/chart.component';
+import { CommService } from "./services/communication/communication.service";
+import { Subscription } from 'rxjs/Subscription';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -14,8 +17,20 @@ export class AppComponent {
   selectedBookmark;
   selectedBookmarkName = "";
   bookmarkName = "";
+  tab_id = 1;
+  subscription: Subscription;
+  countryList = new Array();
+  selectedCountry = "";
 
-  constructor() {
+  constructor(private comm: CommService, private _translate: TranslateService) {
+    this._translate.setDefaultLang('hr');
+    this._translate.use('hr');
+    this.selectedCountry = "hr";
+  }
+
+  changeCountry(val) {
+    this._translate.setDefaultLang(val);
+    this._translate.use(val);
   }
 
   deleteBookMark() {
@@ -81,10 +96,16 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    this.chartList.push(1);
+    //this.chartList.push(1);
+    this.subscription = this.comm.setTabChanged().subscribe(val => {
+      this.tab_id = val;
+    });
+
+    this.countryList.push({ text: "English", code: "en" }, { text: "Croatian", code: "hr" })
   }
 
   addNewChart() {
-    this.chartList.push(1);
+    var timestamp = new Date().getUTCMilliseconds();
+    this.chartList.push({ text : "", id : timestamp});
   }
 }

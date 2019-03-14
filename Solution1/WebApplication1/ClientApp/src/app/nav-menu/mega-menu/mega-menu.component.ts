@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
+import { CommService } from "../../services/communication/communication.service";
 
 @Component({
   selector: 'mega-menu',
@@ -8,8 +9,15 @@ import { UserService } from '../../services/user/user.service';
 })
 export class MegaMenuComponent {
 
+  selectedMenu = 1;
+
+  changeMenu(val) {
+    this.selectedMenu = val;
+    this.comm.tabChanged(val);
+  }
+
   constructor( 
-    private service: UserService 
+    private service: UserService, private comm: CommService 
   ) { }
 
   ngOnInit() {  
