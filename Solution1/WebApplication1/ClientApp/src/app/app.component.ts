@@ -112,7 +112,7 @@ export class AppComponent {
   changeBookmark(value) {
     this.bookmarkName = value;
     for (var i = 0; i < this.bookmarkList.length; i++) {
-      if (this.bookmarkList[i].bname === value) {
+      if (this.bookmarkList[i].Bname === value) {
         this.selectedBookmark = this.bookmarkList[i];
         break;
       }
