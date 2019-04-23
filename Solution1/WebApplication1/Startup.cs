@@ -24,6 +24,7 @@ namespace WebApplication1
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IUserManager, UserManager>();
+            services.AddTransient<IBookmarkManager, BookmarkManager>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

@@ -19,4 +19,14 @@ export class WorkingHours {
 export class ChartInfo {
   searchValue: TreeviewItem[]
   chartGrouping: string[]
+  chartName: string
+}
+
+export class Bookmark {
+  Bname: string
+  Bcontent:string
+}
+
+export class BookmarkContent {
+  charts: ChartInfo[]
 }

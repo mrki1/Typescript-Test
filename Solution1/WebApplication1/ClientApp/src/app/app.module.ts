@@ -26,6 +26,7 @@ import { Globals } from './globals/globals';
 
 import { UserService } from './services/user/user.service';
 import { CommService } from "./services/communication/communication.service";
+import { BookmarkService } from "./services/bookmark/bookmark.service";
 
 //registerLocaleData(localeHr, 'hr');
 //registerLocaleData(localeHr, 'hr', localeHrExtra);
@@ -60,7 +61,7 @@ import { CommService } from "./services/communication/communication.service";
       }
     }),
   ],
-  providers: [UserService, Globals, CommService],
+  providers: [UserService, Globals, CommService, BookmarkService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

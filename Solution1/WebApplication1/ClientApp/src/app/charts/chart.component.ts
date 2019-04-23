@@ -119,19 +119,29 @@ export class BarChartComponent {
 
   ngOnInit() {
 
-    this.chartEditBool = true;
     this.chartNameOld = this.chartName;
 
     this.yAxisList.push({ "text": "Sum Of Hours", "value": "Sum" });
     this.xAxisList.push({ "text": "Month", "value": "Month" }, { "text": "Year", "value": "Year" }, { "text": "Country", "value": "CountryName" }, { "text": "Department", "value": "DepartmentName" });
     this.groupByList.push({ "text": "Month", "value": "Month" }, { "text": "Year", "value": "Year" }, { "text": "Country", "value": "CountryName" }, { "text": "Department", "value": "DepartmentName" });
 
+    this.searchParams = this.globals.searchParams;
+    this.chartInfo = new ChartInfo();
     this.yAxis = "Sum";
     this.xAxis = "";
     this.groupBy = "";
 
-    this.subscription = this.comm.getDataCall().subscribe(message => {
+    if (this.chartItm.text != "") {
+      this.searchParams = this.chartItm.chartInfo.searchValue;
+      this.chartInfo = this.chartItm.chartInfo;
+      this.xAxis = this.chartInfo.chartGrouping[0];
+      this.groupBy = this.chartInfo.chartGrouping[1];
+      this.chartName = this.chartInfo.chartName;
       this.updateData();
+    }
+
+    this.subscription = this.comm.getDataCall().subscribe(message => {
+        this.updateData();
     });
 
     //this.updateData();
@@ -139,11 +149,10 @@ export class BarChartComponent {
 
 
   updateData() {
-    this.searchParams = this.globals.searchParams;
 
     this.workingHours = null;
 
-    this.chartInfo = new ChartInfo();
+    this.chartInfo.chartName = this.chartName;
 
     console.log(this.chartInfo);
 
@@ -164,5 +173,12 @@ export class BarChartComponent {
       err => console.error(err),
       () => { console.log('done loading for chart') }
     );
+
+    for (var i = 0; i < this.chartList.length; i++) {
+      if (this.chartList[i].id === this.chartItm.id) {
+        this.chartList[i].chartInfo = this.chartInfo;
+        break;
+      }
+    }
   }
 } 

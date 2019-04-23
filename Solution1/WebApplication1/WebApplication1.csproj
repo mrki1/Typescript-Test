@@ -18,6 +18,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
   </ItemGroup>
 
@@ -28,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\services\bookmark\bookmark.service.ts" />
     <None Remove="ClientApp\src\app\services\communication\communication.service.ts" />
     <None Remove="ClientApp\src\app\services\translate\translate.service.ts" />
     <None Remove="ClientApp\src\app\services\user\user.service.ts" />
@@ -39,12 +44,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\services\bookmark\bookmark.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\communication\communication.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\translate\translate.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\user\user.service.ts" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ClientApp\src\app\bookmarks\" />
     <Folder Include="ClientApp\src\app\resizable\" />
     <Folder Include="ClientApp\src\assets\i18n\" />
   </ItemGroup>

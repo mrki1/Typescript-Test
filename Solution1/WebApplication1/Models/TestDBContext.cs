@@ -15,24 +15,38 @@ namespace WebApplication1.Models
         {
         }
 
+        public virtual DbSet<Bookmark> Bookmark { get; set; }
         public virtual DbSet<City> City { get; set; }
         public virtual DbSet<Country> Country { get; set; }
         public virtual DbSet<Department> Department { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
+
+        // Unable to generate entity type for table 'dbo.Hours'. Please see the warning messages.
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-ANQ7OOQ\\SQLEXPRESS;Database=TestDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-ANQ7OOQ\\SQLEXPRESS;Database=TestDB;Trusted_Connection=True;ConnectRetryCount=0");
             }
         }
 
-        public DbQuery<UsersVW> UsersVW { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Bookmark>(entity =>
+            {
+                entity.Property(e => e.Bcontent)
+                    .IsRequired()
+                    .HasColumnName("BContent")
+                    .HasMaxLength(1000);
+
+                entity.Property(e => e.Bname)
+                    .IsRequired()
+                    .HasColumnName("BName")
+                    .HasMaxLength(50);
+            });
+
             modelBuilder.Entity<City>(entity =>
             {
                 entity.Property(e => e.CityId).ValueGeneratedNever();

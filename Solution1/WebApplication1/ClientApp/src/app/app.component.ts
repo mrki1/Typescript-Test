@@ -3,6 +3,9 @@ import { BarChartComponent } from './charts/chart.component';
 import { CommService } from "./services/communication/communication.service";
 import { Subscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
+import { BookmarkService } from "./services/bookmark/bookmark.service";
+import { Bookmark, BookmarkContent, ChartInfo } from './models/models';
+import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent {
   title = 'app';
   chartList = new Array;
-  bookmarkList = [];
+  bookmarkList: Bookmark[] = new Array();
   bookSaveBtnName = "Add New";
   selectedBookmark;
   selectedBookmarkName = "";
@@ -21,8 +24,11 @@ export class AppComponent {
   subscription: Subscription;
   countryList = new Array();
   selectedCountry = "";
+  bookmark: Bookmark;
+  bookmarkContent: BookmarkContent;
+  chartInfo: ChartInfo;
 
-  constructor(private comm: CommService, private _translate: TranslateService) {
+  constructor(private comm: CommService, private _translate: TranslateService, private bookmservice: BookmarkService) {
     this._translate.setDefaultLang('hr');
     this._translate.use('hr');
     this.selectedCountry = "hr";
@@ -35,7 +41,7 @@ export class AppComponent {
 
   deleteBookMark() {
     for (var i = 0; i < this.bookmarkList.length; i++) {
-      if (this.bookmarkList[i].text === this.selectedBookmark.text) {
+      if (this.bookmarkList[i].Bname === this.selectedBookmark.Bname) {
         this.bookmarkList.splice(i, 1);
         break;
       }
@@ -59,9 +65,8 @@ export class AppComponent {
     console.log(this.bookmarkName);
 
     for (var i = 0; i < this.bookmarkList.length; i++) {
-      if (this.bookmarkList[i].text === this.selectedBookmark.text) {
-        this.bookmarkList[i].text = this.bookmarkName;
-        console.log("op");
+      if (this.bookmarkList[i].Bname === this.selectedBookmark.Bname) {
+        this.bookmarkList[i].Bname = this.bookmarkName;
         break;
       }
     }
@@ -83,29 +88,67 @@ export class AppComponent {
 
         //http
 
-        this.bookmarkList.push({ text: this.bookmarkName });
-        this.selectedBookmark = { text: this.bookmarkName };
-      this.selectedBookmarkName = this.bookmarkName;
+      this.bookmarkContent = new BookmarkContent();
+      this.bookmarkContent.charts = new Array();
+      for (var i = 0; i < this.chartList.length; i++) {
+        this.bookmarkContent.charts.push(this.chartList[i].chartInfo);
+      }
+
+      this.bookmark = new Bookmark();
+      this.bookmark.Bname = this.bookmarkName;
+      this.bookmark.Bcontent = JSON.stringify(this.bookmarkContent);
+
+      this.bookmservice.createBookmark(this.bookmark).subscribe(
+        data => { this.bookmarkList = data;
+          this.bookmarkList.push(this.bookmark);
+          this.selectedBookmark = this.bookmark;
+          this.selectedBookmarkName = this.bookmarkName;},
+        err => console.error(err),
+        () => { console.log('done saving bookmark') }
+      );
     }
   }
 
   changeBookmark(value) {
     this.bookmarkName = value;
-    this.selectedBookmark = { text: value };
+    for (var i = 0; i < this.bookmarkList.length; i++) {
+      if (this.bookmarkList[i].bname === value) {
+        this.selectedBookmark = this.bookmarkList[i];
+        break;
+      }
+    }
     this.selectedBookmarkName = value;
+
+    this.bookmarkContent = JSON.parse(this.selectedBookmark.bcontent);
+
+    this.chartList = new Array;
+
+    var timestamp;
+
+    for (var i = 0; i < this.bookmarkContent.charts.length; i++) {
+      timestamp = new Date().getUTCMilliseconds();
+      this.chartList.push({ text: this.bookmarkContent.charts[i].chartName, id: timestamp, chartInfo: this.bookmarkContent.charts[i] });
+    }
   }
 
   ngOnInit() {
-    //this.chartList.push(1);
+    this.chartInfo = new ChartInfo();
+
     this.subscription = this.comm.setTabChanged().subscribe(val => {
       this.tab_id = val;
     });
 
-    this.countryList.push({ text: "English", code: "en" }, { text: "Croatian", code: "hr" })
+    this.countryList.push({ text: "English", code: "en" }, { text: "Croatian", code: "hr" });
+
+    this.bookmservice.getAllBookmarks().subscribe(
+      data => { this.bookmarkList = data },
+      err => console.error(err),
+      () => { console.log('done loading bookmarks') }
+    );
   }
 
   addNewChart() {
-    var timestamp = new Date().getUTCMilliseconds();
-    this.chartList.push({ text : "", id : timestamp});
+    var timestamp = new Date().getUTCMilliseconds(); 
+    this.chartList.push({ text : "", id : timestamp, chartInfo : null});
   }
 }

@@ -24,4 +24,16 @@ var ChartInfo = /** @class */ (function () {
     return ChartInfo;
 }());
 exports.ChartInfo = ChartInfo;
+var Bookmark = /** @class */ (function () {
+    function Bookmark() {
+    }
+    return Bookmark;
+}());
+exports.Bookmark = Bookmark;
+var BookmarkContent = /** @class */ (function () {
+    function BookmarkContent() {
+    }
+    return BookmarkContent;
+}());
+exports.BookmarkContent = BookmarkContent;
 //# sourceMappingURL=models.js.map
